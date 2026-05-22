@@ -1,0 +1,119 @@
+// ============================================================================
+//  SERVIDOR  (Node.js + Express)
+// ============================================================================
+//  ¿Qué hace este archivo?
+//    1. Sirve las paginas web (los archivos de la carpeta /public).
+//    2. Ofrece una pequeña "API": unas direcciones (/api/...) que el navegador
+//       llama para guardar y leer las solicitudes que deja la gente.
+//    3. Guarda esas solicitudes en el archivo data/solicitudes.json
+//       (asi persisten aunque cierres el servidor y lo vuelvas a abrir).
+//
+//  Para arrancarlo:  npm install   (una sola vez)  y luego   npm start
+//  Despues abre en el navegador:   http://localhost:3000
+// ============================================================================
+
+const express = require('express');   // el framework del servidor
+const fs = require('fs');             // para leer/escribir archivos
+const path = require('path');         // para construir rutas de archivos
+
+const app = express();
+const PUERTO = 3000;
+
+// Ruta del archivo donde guardamos las solicitudes
+const ARCHIVO_DATOS = path.join(__dirname, 'data', 'solicitudes.json');
+
+// ----------------------------------------------------------------------------
+//  Funciones auxiliares para leer y escribir el JSON
+// ----------------------------------------------------------------------------
+function leerSolicitudes() {
+  // Si el archivo no existe todavia, devolvemos una lista vacia.
+  if (!fs.existsSync(ARCHIVO_DATOS)) return [];
+  const contenido = fs.readFileSync(ARCHIVO_DATOS, 'utf-8');
+  try {
+    return JSON.parse(contenido);
+  } catch {
+    return []; // por si el archivo se corrompe, no rompemos el servidor
+  }
+}
+
+function guardarSolicitudes(lista) {
+  // null, 2 = guarda el JSON "bonito" e indentado, facil de leer a mano
+  fs.writeFileSync(ARCHIVO_DATOS, JSON.stringify(lista, null, 2));
+}
+
+// ----------------------------------------------------------------------------
+//  Configuracion
+// ----------------------------------------------------------------------------
+app.use(express.json());                              // entender JSON en las peticiones
+app.use(express.static(path.join(__dirname, 'public'))); // servir las paginas
+
+// ============================================================================
+//  API
+// ============================================================================
+
+// GET /api/solicitudes  ->  devuelve TODAS las solicitudes (para la bandeja)
+app.get('/api/solicitudes', (req, res) => {
+  res.json(leerSolicitudes());
+});
+
+// POST /api/solicitudes ->  guarda una solicitud nueva
+//   El navegador envia: { amigoId, amigoNombre, nombre, contacto, mensaje }
+app.post('/api/solicitudes', (req, res) => {
+  const { amigoId, amigoNombre, nombre, contacto, mensaje } = req.body;
+
+  // Validacion minima: nombre y contacto son obligatorios
+  if (!nombre || !contacto) {
+    return res.status(400).json({ error: 'Faltan el nombre o el contacto.' });
+  }
+
+  const solicitudes = leerSolicitudes();
+  const nueva = {
+    id: Date.now(),                 // un id unico sencillo (la hora en ms)
+    amigoId,
+    amigoNombre,
+    nombre,
+    contacto,
+    mensaje: mensaje || '',
+    estado: 'pendiente',            // pendiente | aceptada | rechazada
+    fecha: new Date().toISOString()
+  };
+  solicitudes.push(nueva);
+  guardarSolicitudes(solicitudes);
+
+  res.status(201).json(nueva);
+});
+
+// PATCH /api/solicitudes/:id  ->  cambia el estado (aceptar / rechazar)
+//   El navegador envia: { estado: "aceptada" }  (por ejemplo)
+app.patch('/api/solicitudes/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const { estado } = req.body;
+  const solicitudes = leerSolicitudes();
+  const solicitud = solicitudes.find(s => s.id === id);
+
+  if (!solicitud) return res.status(404).json({ error: 'No encontrada.' });
+
+  solicitud.estado = estado;
+  guardarSolicitudes(solicitudes);
+  res.json(solicitud);
+});
+
+// DELETE /api/solicitudes/:id  ->  borra una solicitud
+app.delete('/api/solicitudes/:id', (req, res) => {
+  const id = Number(req.params.id);
+  let solicitudes = leerSolicitudes();
+  solicitudes = solicitudes.filter(s => s.id !== id);
+  guardarSolicitudes(solicitudes);
+  res.json({ ok: true });
+});
+
+// ----------------------------------------------------------------------------
+//  Arrancar el servidor
+// ----------------------------------------------------------------------------
+app.listen(PUERTO, () => {
+  console.log('===========================================');
+  console.log('  Servidor en marcha!');
+  console.log('  Abre en el navegador:  http://localhost:' + PUERTO);
+  console.log('  (para detenerlo: Ctrl + C)');
+  console.log('===========================================');
+});

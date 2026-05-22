@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lajas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+  <header class="portada">
+    <p class="saludo">Amigos desde siempre</p>
+    <h1>Conoce a las <em>Lajas</em>.</h1>
+    <p>Toca cualquier perfil para saber más sobre cada uno de nosotros.</p>
+  </header>
+
+  <!-- Aqui, con JavaScript, se rellena la lista de amigos automaticamente -->
+  <main class="contenedor">
+    <div class="lista" id="lista"></div>
+  </main>
+
+  <footer>
+    Hecho con cariño (y un poco de código) · <span id="anio"></span>
+    <br>
+    <!-- Enlace discreto a la zona privada donde se ven las solicitudes -->
+    <a href="bandeja.html">· zona privada ·</a>
+  </footer>
+
+  <!-- Primero cargamos los datos, luego el codigo que arma la pagina -->
+  <script src="datos.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

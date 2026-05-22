@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bandeja · Lajas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+  <header class="portada">
+    <p class="saludo">Zona privada</p>
+    <h1>Bandeja de <em>solicitudes</em></h1>
+    <p>Aquí llegan las solicitudes para deliberar con la sabiduría que os caracteriza.</p>
+  </header>
+
+  <main class="contenedor">
+    <a class="nav-volver" href="index.html">← Volver a las Lajas</a>
+
+    <!-- Botones para filtrar por amigo -->
+    <div class="filtros" id="filtros"></div>
+
+    <!-- Aqui se pintan las solicitudes -->
+    <div id="solicitudes"></div>
+  </main>
+
+  <footer>Hecho con cariño (y un poco de código)</footer>
+
+  <script src="datos.js"></script>
+  <script src="bandeja.js"></script>
+</body>
+</html>
