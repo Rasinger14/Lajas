@@ -13,23 +13,39 @@
 
   <header class="portada">
     <p class="saludo">Amigos desde siempre</p>
-    <h1>Conoce a las <em>Lajas</em>.</h1>
-    <p>Toca cualquier perfil para saber más sobre cada uno de nosotros.</p>
+    <h1><em>Lajas</em></h1>
   </header>
 
-  <!-- Aqui, con JavaScript, se rellena la lista de amigos automaticamente -->
+  <nav class="tabs-nav">
+    <div class="tabs-contenedor contenedor">
+      <button class="tab activo" data-tab="perfiles">Perfiles</button>
+      <button class="tab" data-tab="trips">Trips</button>
+      <button class="tab" data-tab="eventos">Futuros Eventos</button>
+    </div>
+  </nav>
+
   <main class="contenedor">
-    <div class="lista" id="lista"></div>
+
+    <section id="sec-perfiles" class="seccion">
+      <div class="lista" id="lista"></div>
+    </section>
+
+    <section id="sec-trips" class="seccion seccion-oculta">
+      <div id="trips-contenido"></div>
+    </section>
+
+    <section id="sec-eventos" class="seccion seccion-oculta">
+      <div id="eventos-contenido"></div>
+    </section>
+
   </main>
 
   <footer>
     Hecho con cariño (y un poco de código) · <span id="anio"></span>
     <br>
-    <!-- Enlace discreto a la zona privada donde se ven las solicitudes -->
     <a href="bandeja.html">· zona privada ·</a>
   </footer>
 
-  <!-- Primero cargamos los datos, luego el codigo que arma la pagina -->
   <script src="datos.js"></script>
   <script src="index.js"></script>
 </body>

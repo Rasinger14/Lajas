@@ -174,3 +174,83 @@ const AMIGOS = [
 function buscarAmigo(id) {
   return AMIGOS.find(a => a.id === id);
 }
+
+// ===========================================================================
+//  TRIPS
+//  Para agregar un trip, añade un objeto a este array con la estructura:
+//  {
+//    id: "nombre-unico",
+//    titulo: "Titulo del trip",
+//    fecha: "2024-08-01",          // formato YYYY-MM-DD
+//    descripcion: "...",
+//    portada: "fotos/trips/x.jpg", // o null si no hay foto
+//    fotos: [],                    // array de paths a fotos adicionales
+//    video: null                   // ID de YouTube o null
+//  }
+// ===========================================================================
+const TRIPS = [];
+
+// ===========================================================================
+//  FUTUROS EVENTOS
+// ===========================================================================
+const EVENTOS = [
+  {
+    id: "cumple-tincito-2026",
+    titulo: "Cumpleaños de Tincito",
+    fecha: "2026-06-12",
+    emoji: "🎂",
+    categoria: "Cumpleaños",
+    lugar: "Por confirmar",
+    descripcion: "Lajas???????",
+    detalles: "Ojalá Tincito deje la gaysada y haga lajas.",
+    color: "#4338CA"
+  },
+  {
+    id: "cumple-josiel-2026",
+    titulo: "Cumpleaños de Josiel",
+    fecha: "2026-07-11",
+    emoji: "🎂",
+    categoria: "Cumpleaños",
+    lugar: "Por confirmar",
+    descripcion: "Fiesta de Cumpleaños de Josiel (probablemente bebedera infinita).",
+    detalles: "Ubicación por confirmar, pero de seguro bebedera asegurada no importa dónde.",
+    color: "#065F46"
+  },
+  {
+    id: "agosto-2026",
+    titulo: "Agosto — Cumpleaños de Angel, Cordoba, Fernando",
+    fecha: "2026-08-01",
+    emoji: "🎉",
+    categoria: "Cumpleaños",
+    lugar: "Todo Agosto",
+    descripcion: "Preparense para gastar. El mes más caro siempre en todos los años. Bebedera absoluta como siempre. Vagancia descontrolada hasta el fin y más allá.",
+    detalles: "Preparense para estar el mes completo de aquí para allá solo pensando en si voy a beber más que el día anterior. Todo Agosto, desde el 1ero hasta el 31, extendible a septiembre también.",
+    color: "#D97706"
+  },
+  {
+    id: "cumple-lambrano-2026",
+    titulo: "Cumpleaños de Lambraño",
+    fecha: "2026-09-12",
+    emoji: "🎂",
+    categoria: "Cumpleaños",
+    lugar: "Por confirmar",
+    descripcion: "No es necesario especificar, lo más probable es que todo el mundo quede hasta la verga. Beber, beber y más beber.",
+    detalles: "Todo tipo de alcohol.",
+    color: "#BE123C"
+  },
+  {
+    id: "tin-yatch-party-2026",
+    titulo: "Tin Yatch Party",
+    fecha: "2026-10-16",
+    emoji: "🛥️",
+    categoria: "Evento",
+    lugar: "El yate de Tin",
+    descripcion: "Si eres gyal tienes que besar a Agustin pa poder subir al yate, si besas mal NO VAS, TE QUEDASTE. Si eres fren relajao. (Cordoba en la cuerda floja si no consigue un grupo de 10 mujeres todas modelos Miss Universo).",
+    detalles: "Alcohol, música, fiesta, sustancias ilícitas, relaciones íntimas prematrimoniales, etc. Fin de semana del 16 completo.",
+    color: "#0891B2"
+  }
+];
+
+function buscarEvento(id) {
+  return EVENTOS.find(e => e.id === id);
+}

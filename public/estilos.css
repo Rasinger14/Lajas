@@ -331,3 +331,218 @@ footer a { color: var(--suave); }
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================================================
+   TABS DE NAVEGACION (pagina principal + bandeja)
+   ========================================================================== */
+.tabs-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(14, 14, 15, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabs-contenedor {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+}
+
+.tab {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 16px 22px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--suave);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.tab:hover { color: var(--tinta); }
+.tab.activo {
+  color: var(--acento);
+  border-bottom-color: var(--acento);
+}
+
+/* Secciones visibles / ocultas */
+.seccion-oculta { display: none !important; }
+.seccion { padding-top: 40px; padding-bottom: 80px; }
+
+/* ==========================================================================
+   ESTADO VACIO (trips o eventos sin contenido)
+   ========================================================================== */
+.seccion-vacia {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--suave);
+}
+.seccion-vacia-icono { font-size: 4rem; margin-bottom: 20px; }
+.seccion-vacia h3 {
+  font-size: 1.5rem;
+  color: var(--tinta);
+  margin-bottom: 10px;
+  font-family: 'Fraunces', serif;
+}
+.seccion-vacia p { max-width: 420px; margin: 0 auto; font-size: 1rem; }
+
+/* ==========================================================================
+   TRIPS
+   ========================================================================== */
+.trips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.trip-card {
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  animation: aparecer 0.4s ease backwards;
+}
+.trip-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+  border-color: var(--acento);
+}
+
+.trip-portada {
+  width: 100%;
+  height: 200px;
+  background: #1a1a1e;
+  overflow: hidden;
+}
+.trip-portada img { width: 100%; height: 100%; object-fit: cover; }
+.trip-portada-vacia {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: var(--borde);
+}
+
+.trip-info { padding: 20px; }
+.trip-info h3 {
+  font-size: 1.15rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.trip-fecha {
+  font-size: 0.78rem;
+  color: var(--acento);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.trip-desc { font-size: 0.9rem; color: var(--suave); line-height: 1.5; }
+.trip-contador {
+  font-size: 0.78rem;
+  color: var(--suave);
+  margin-top: 10px;
+  border-top: 1px solid var(--borde);
+  padding-top: 10px;
+}
+
+/* ==========================================================================
+   EVENTOS (lista en pagina principal)
+   ========================================================================== */
+.eventos-lista { display: flex; flex-direction: column; gap: 14px; }
+
+.evento-card {
+  text-decoration: none;
+  color: inherit;
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  animation: aparecer 0.4s ease backwards;
+}
+.evento-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+  border-color: var(--acento);
+}
+
+.evento-emoji {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+
+.evento-info { flex: 1; min-width: 0; }
+.evento-cat {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: var(--acento);
+}
+.evento-info h3 {
+  font-size: 1.1rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  margin: 4px 0;
+}
+.evento-fecha,
+.evento-lugar { font-size: 0.85rem; color: var(--suave); margin: 2px 0; }
+
+.evento-lado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.evento-dias {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.evento-card .flecha { color: var(--borde); font-size: 1.2rem; transition: color 0.2s; }
+.evento-card:hover .flecha { color: var(--acento); }
+
+/* ==========================================================================
+   PAGINA DE DETALLE DE EVENTO
+   ========================================================================== */
+.cabecera-evento {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+.evento-emoji-grande {
+  width: 90px;
+  height: 90px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+.evento-meta { font-size: 0.95rem; color: var(--suave); margin-top: 8px; }

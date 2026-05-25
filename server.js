@@ -19,8 +19,8 @@ const path = require('path');         // para construir rutas de archivos
 const app = express();
 const PUERTO = 3000;
 
-// Ruta del archivo donde guardamos las solicitudes
-const ARCHIVO_DATOS = path.join(__dirname, 'data', 'solicitudes.json');
+const ARCHIVO_DATOS           = path.join(__dirname, 'data', 'solicitudes.json');
+const ARCHIVO_PARTICIPACIONES = path.join(__dirname, 'data', 'participaciones.json');
 
 // ----------------------------------------------------------------------------
 //  Funciones auxiliares para leer y escribir el JSON
@@ -104,6 +104,51 @@ app.delete('/api/solicitudes/:id', (req, res) => {
   let solicitudes = leerSolicitudes();
   solicitudes = solicitudes.filter(s => s.id !== id);
   guardarSolicitudes(solicitudes);
+  res.json({ ok: true });
+});
+
+// ============================================================================
+//  API — PARTICIPACIONES EN EVENTOS
+// ============================================================================
+
+function leerParticipaciones() {
+  if (!fs.existsSync(ARCHIVO_PARTICIPACIONES)) return [];
+  const c = fs.readFileSync(ARCHIVO_PARTICIPACIONES, 'utf-8');
+  try { return JSON.parse(c); } catch { return []; }
+}
+
+function guardarParticipaciones(lista) {
+  fs.writeFileSync(ARCHIVO_PARTICIPACIONES, JSON.stringify(lista, null, 2));
+}
+
+app.get('/api/participaciones', (req, res) => {
+  res.json(leerParticipaciones());
+});
+
+app.post('/api/participaciones', (req, res) => {
+  const { eventoId, eventoTitulo, nombre, contacto, mensaje } = req.body;
+  if (!nombre || !contacto) {
+    return res.status(400).json({ error: 'Faltan nombre o contacto.' });
+  }
+  const lista = leerParticipaciones();
+  const nueva = {
+    id: Date.now(),
+    eventoId,
+    eventoTitulo,
+    nombre,
+    contacto,
+    mensaje: mensaje || '',
+    fecha: new Date().toISOString()
+  };
+  lista.push(nueva);
+  guardarParticipaciones(lista);
+  res.status(201).json(nueva);
+});
+
+app.delete('/api/participaciones/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const lista = leerParticipaciones().filter(p => p.id !== id);
+  guardarParticipaciones(lista);
   res.json({ ok: true });
 });
 

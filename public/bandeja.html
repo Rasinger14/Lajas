@@ -13,18 +13,31 @@
 
   <header class="portada">
     <p class="saludo">Zona privada</p>
-    <h1>Bandeja de <em>solicitudes</em></h1>
-    <p>Aquí llegan las solicitudes para deliberar con la sabiduría que os caracteriza.</p>
+    <h1>Bandeja de <em>entradas</em></h1>
+    <p>Solicitudes de perfiles y confirmaciones de eventos.</p>
   </header>
+
+  <nav class="tabs-nav">
+    <div class="tabs-contenedor contenedor">
+      <button class="tab activo" data-tab="solicitudes">Solicitudes</button>
+      <button class="tab" data-tab="participaciones">Participaciones en Eventos</button>
+    </div>
+  </nav>
 
   <main class="contenedor">
     <a class="nav-volver" href="index.html">← Volver a las Lajas</a>
 
-    <!-- Botones para filtrar por amigo -->
-    <div class="filtros" id="filtros"></div>
+    <!-- Vista: Solicitudes de perfiles -->
+    <section id="sec-solicitudes" class="seccion">
+      <div class="filtros" id="filtros"></div>
+      <div id="solicitudes"></div>
+    </section>
 
-    <!-- Aqui se pintan las solicitudes -->
-    <div id="solicitudes"></div>
+    <!-- Vista: Participaciones en eventos -->
+    <section id="sec-participaciones" class="seccion seccion-oculta">
+      <div class="filtros" id="filtros-eventos"></div>
+      <div id="participaciones"></div>
+    </section>
   </main>
 
   <footer>Hecho con cariño (y un poco de código)</footer>
