@@ -69,40 +69,117 @@ AMIGOS.forEach((amigo, i) => {
   contenedorLista.appendChild(enlace);
 });
 
-// ---- Trips ----
+// ---- Trips/Recuerdos ----
 const tripsContenido = document.getElementById('trips-contenido');
 
-if (TRIPS.length === 0) {
-  tripsContenido.innerHTML = `
-    <div class="seccion-vacia">
-      <div class="seccion-vacia-icono">📸</div>
-      <h3>Próximamente...</h3>
-      <p>Los trips de las Lajas aparecerán aquí. ¡Los primeros recuerdos están por llegar!</p>
-    </div>
-  `;
-} else {
-  const grid = document.createElement('div');
-  grid.className = 'trips-grid';
-  TRIPS.forEach((trip, i) => {
-    const card = document.createElement('div');
-    card.className = 'trip-card';
-    card.style.animationDelay = (i * 0.1) + 's';
-    const portadaHTML = trip.portada
-      ? `<div class="trip-portada"><img src="${trip.portada}" alt="${trip.titulo}"></div>`
-      : `<div class="trip-portada trip-portada-vacia"><span>📷</span></div>`;
-    card.innerHTML = `
-      ${portadaHTML}
-      <div class="trip-info">
-        <h3>${trip.titulo}</h3>
-        ${trip.fecha ? `<p class="trip-fecha">${formatearFecha(trip.fecha)}</p>` : ''}
-        <p class="trip-desc">${trip.descripcion || ''}</p>
-        ${trip.fotos.length > 0 ? `<p class="trip-contador">${trip.fotos.length} foto${trip.fotos.length !== 1 ? 's' : ''}</p>` : ''}
+// Modal de galería (se inserta una vez en el DOM)
+const modalHTML = `
+  <div id="galeria-modal" class="galeria-modal" style="display:none">
+    <div class="galeria-modal-inner">
+      <div class="galeria-modal-header">
+        <h2 id="galeria-titulo"></h2>
+        <button id="galeria-cerrar" class="galeria-cerrar">×</button>
       </div>
-    `;
-    grid.appendChild(card);
+      <div id="galeria-grid" class="galeria-grid"></div>
+    </div>
+  </div>
+  <div id="lightbox" class="lightbox" style="display:none">
+    <button class="lightbox-cerrar">×</button>
+    <img id="lightbox-img" src="" alt="">
+  </div>
+`;
+document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+const modal        = document.getElementById('galeria-modal');
+const modalTitulo  = document.getElementById('galeria-titulo');
+const modalGrid    = document.getElementById('galeria-grid');
+const lightbox     = document.getElementById('lightbox');
+const lightboxImg  = document.getElementById('lightbox-img');
+
+document.getElementById('galeria-cerrar').addEventListener('click', cerrarGaleria);
+modal.addEventListener('click', e => { if (e.target === modal) cerrarGaleria(); });
+lightbox.addEventListener('click', e => { if (e.target === lightbox || e.target.classList.contains('lightbox-cerrar')) cerrarLightbox(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { cerrarLightbox(); cerrarGaleria(); }
+});
+
+function abrirGaleria(trip) {
+  modalTitulo.textContent = trip.nombre;
+  modalGrid.innerHTML = '';
+  trip.archivos.forEach(archivo => {
+    const item = document.createElement('div');
+    item.className = 'galeria-item';
+    if (archivo.tipo === 'imagen') {
+      item.innerHTML = `<img src="${archivo.url}" alt="${archivo.nombre}" loading="lazy">`;
+      item.addEventListener('click', () => {
+        lightboxImg.src = archivo.url;
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      });
+    } else {
+      item.classList.add('galeria-item-video');
+      item.innerHTML = `<video src="${archivo.url}" controls preload="metadata"></video>`;
+    }
+    modalGrid.appendChild(item);
   });
-  tripsContenido.appendChild(grid);
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
+
+function cerrarGaleria() {
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+  modalGrid.innerHTML = '';
+}
+
+function cerrarLightbox() {
+  lightbox.style.display = 'none';
+  lightboxImg.src = '';
+  document.body.style.overflow = modal.style.display === 'flex' ? 'hidden' : '';
+}
+
+fetch('/api/trips')
+  .then(r => r.json())
+  .then(trips => {
+    if (trips.length === 0) {
+      tripsContenido.innerHTML = `
+        <div class="seccion-vacia">
+          <div class="seccion-vacia-icono">📸</div>
+          <h3>Próximamente...</h3>
+          <p>Los recuerdos de las Lajas aparecerán aquí.</p>
+        </div>
+      `;
+      return;
+    }
+    const grid = document.createElement('div');
+    grid.className = 'trips-grid';
+    trips.forEach((trip, i) => {
+      const card = document.createElement('div');
+      card.className = 'trip-card';
+      card.style.animationDelay = (i * 0.1) + 's';
+      card.style.cursor = 'pointer';
+      const portadaHTML = trip.portada
+        ? `<div class="trip-portada"><img src="${trip.portada}" alt="${trip.nombre}"></div>`
+        : `<div class="trip-portada trip-portada-vacia"><span>📷</span></div>`;
+      const total = trip.archivos.length;
+      const fotos  = trip.archivos.filter(a => a.tipo === 'imagen').length;
+      const videos = trip.archivos.filter(a => a.tipo === 'video').length;
+      const resumen = [
+        fotos  > 0 ? `${fotos} foto${fotos !== 1 ? 's' : ''}`   : '',
+        videos > 0 ? `${videos} video${videos !== 1 ? 's' : ''}` : ''
+      ].filter(Boolean).join(' · ');
+      card.innerHTML = `
+        ${portadaHTML}
+        <div class="trip-info">
+          <h3>${trip.nombre}</h3>
+          <p class="trip-contador">${resumen || `${total} archivo${total !== 1 ? 's' : ''}`}</p>
+        </div>
+      `;
+      card.addEventListener('click', () => abrirGaleria(trip));
+      grid.appendChild(card);
+    });
+    tripsContenido.appendChild(grid);
+  });
 
 // ---- Eventos ----
 const eventosContenido = document.getElementById('eventos-contenido');

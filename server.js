@@ -152,6 +152,32 @@ app.delete('/api/participaciones/:id', (req, res) => {
   res.json({ ok: true });
 });
 
+// ============================================================================
+//  API — TRIPS (lee las carpetas de fotos dinámicamente)
+// ============================================================================
+app.get('/api/trips', (req, res) => {
+  const carpetaFotos = path.join(__dirname, 'public', 'fotos');
+  const IMAGENES = /\.(jpe?g|png|gif|webp)$/i;
+  const VIDEOS   = /\.(mp4|mov|webm)$/i;
+
+  const entradas = fs.readdirSync(carpetaFotos, { withFileTypes: true });
+  const trips = entradas
+    .filter(e => e.isDirectory())
+    .map(dir => {
+      const archivos = fs.readdirSync(path.join(carpetaFotos, dir.name))
+        .filter(f => IMAGENES.test(f) || VIDEOS.test(f))
+        .map(f => ({
+          nombre: f,
+          tipo: IMAGENES.test(f) ? 'imagen' : 'video',
+          url: `/fotos/${encodeURIComponent(dir.name)}/${encodeURIComponent(f)}`
+        }));
+      const portada = archivos.find(a => a.tipo === 'imagen') || null;
+      return { nombre: dir.name, portada: portada ? portada.url : null, archivos };
+    });
+
+  res.json(trips);
+});
+
 // ----------------------------------------------------------------------------
 //  Arrancar el servidor
 // ----------------------------------------------------------------------------
